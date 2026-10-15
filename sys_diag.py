@@ -251,8 +251,11 @@ def execute_replace_in_file(filename, target_text, replacement_text):
             return f"Error: target_text not found in {filename}. Ensure exact whitespace and indentation match."
         if count > 1:
             return f"Error: target_text matches {count} places in {filename}. Include more surrounding lines to make it unique."
+        new_content = content.replace(target_text, replacement_text, 1)
+        if new_content and not new_content.endswith('\n'):
+            new_content += '\n'
         with open(p, 'w', encoding='utf-8') as f:
-            f.write(content.replace(target_text, replacement_text, 1))
+            f.write(new_content)
         return f"Successfully replaced text in {filename}"
     except Exception as e:
         return f"Error modifying file: {e}"
@@ -279,8 +282,11 @@ def execute_insert_after(filename, anchor_text, new_text):
         if not before.endswith('\n'):
             before += '\n'
         insertion = new_text.strip('\n').rstrip() + '\n'
+        new_content = before + insertion + content[eol:]
+        if not new_content.endswith('\n'):
+            new_content += '\n'
         with open(p, 'w', encoding='utf-8') as f:
-            f.write(before + insertion + content[eol:])
+            f.write(new_content)
         return f"Successfully inserted into {filename}"
     except Exception as e:
         return f"Error modifying file: {e}"

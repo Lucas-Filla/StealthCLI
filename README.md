@@ -4,7 +4,8 @@ StealthCLI is a command-line AI assistant built to eliminate context-switching d
 
 ## Features
 
-* **Local File I/O:** The AI can read files in your current directory, figure out what's wrong, and completely rewrite the file with fixes when you tell it to.
+- **Surgical File I/O:** Instead of completely rewriting files and burning tokens, the AI uses targeted tools (`search_file`, `insert_after`, `replace_in_file`, `append_to_file`) to locate and inject code with grep-like precision. It enforces strict matching to prevent accidental overwrites.
+- **Token Efficiency:** Artificially short-circuits the API loop on successful writes to cut prompt token costs in half, and dynamically truncates old tool outputs to keep the context window lean.
 * **Agentic Retry Loop:** Open-source models sometimes hallucinate tool arguments or format JSON poorly. The script catches `400` errors, secretly tells the AI to fix its formatting, and loops until it gets it right (up to 5 steps).
 * **Path Traversal Protection:** Uses `pathlib` to ensure the LLM can only read/write files inside your current working directory. It can't accidentally (or maliciously) touch `~/.ssh` or `/etc/`.
 * **Context Management:** Slices conversation history at user-message boundaries so long debugging sessions don't crash the API token limit, while keeping tool-call sequences intact.
@@ -49,12 +50,13 @@ The install script sets up the hidden directory, builds the virtual environment,
 Navigate to any code folder and type `sys_diag` to start the stealth session. 
 
 ```bash
-lucas@Studio2:~/projects/my_app$ sys_diag
-lucas@Studio2:~/projects/my_app$ read the python files in this folder and tell me why the loop is crashing.
+# Example 1: Targeted debugging (Token Efficient)
+lucas@Studio2:~/projects/my_app$ search main.py for the database connection
+lucas@Studio2:~/projects/my_app$ insert the retry logic after the connection initialization
+Done.
 
-# The AI will read the files and print an explanation to the terminal.
-
-lucas@Studio2:~/projects/my_app$ implement the fix in main.py
+# Example 2: Creating new files from scratch
+lucas@Studio2:~/projects/my_app$ create a new file called utils.py and write a python function to parse CSVs
 Done.
 
 lucas@Studio2:~/projects/my_app$ exit
@@ -64,3 +66,4 @@ lucas@Studio2:~/projects/my_app$ exit
 * `clear`: Clears the terminal natively.
 * `exit` / `quit`: Exits the agent and returns to normal bash.
 * `Ctrl+C` / `Ctrl+D`: Exits cleanly.
+* `SYS_DIAG_DEBUG=1 sys_diag`: Runs the tool in debug mode to print token usage per turn and expose API stack traces.
