@@ -28,9 +28,11 @@ This tool uses Groq to keep the terminal responses feeling instantaneous.
 2. Log in and go to **API Keys**.
 3. Click **Create API Key**. Groq has offered a free tier; check their site for current limits. Save the `gsk_...` string.
 
+This key will be pasted into `~/.stealth_llm/.env` during installation (step 3)
+
 ## Installation
 
-The install script sets up the hidden directory, builds the virtual environment, and adds the alias to your `.bashrc`, `.zshrc`, `.bash_profile`, or `.profile`.
+The install script sets up the hidden directory, builds the virtual environment, creates a `.env` file for your API key, and adds the alias to your `.bashrc`, `.zshrc`, `.bash_profile`, or `.profile`.
 
 1. **Clone the repo:**
    ```bash
@@ -45,10 +47,15 @@ The install script sets up the hidden directory, builds the virtual environment,
    ```
 
 3. **Add your API Key:**
-   Open the newly created config file and paste your Groq key:
+   The installer created `~/.stealth_llm/.env` with a placeholder line:
+   ```
+   GROQ_API_KEY=your_key_here
+   ```
+   Open it and replace `your_key_here` with your Groq key (the `gsk_...` string). Keep the variable name `GROQ_API_KEY` exactly as is, with no quotes or spaces around the `=`:
    ```bash
    nano ~/.stealth_llm/.env
    ```
+   If you skip this, `sys_diag` exits with `GROQ_API_KEY not set in ~/.stealth_llm/.env`.
 
 4. **Reload your shell:**
    ```bash
