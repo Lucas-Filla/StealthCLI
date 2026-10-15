@@ -47,6 +47,7 @@ The install script sets up the hidden directory, builds the virtual environment,
    ```
 
 3. **Add your API Key:**
+
    The installer created `~/.stealth_llm/.env` with a placeholder line:
    ```
    GROQ_API_KEY=your_key_here
